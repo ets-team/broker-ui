@@ -1,6 +1,7 @@
 // @material-ui/icons
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
+import InsertChartOutlined from "@material-ui/icons/InsertChartOutlined";
 // import ContentPaste from "@material-ui/icons/ContentPaste";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -16,8 +17,16 @@ import Icons from "views/Icons/Icons.jsx";
 import Maps from "views/Maps/Maps.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.jsx";
+import MarketView from "views/Market/MarketView.jsx";
 
 const dashboardRoutes = [
+  {
+    path: "/market",
+    sidebarName: "Market View",
+    navbarName: "Market View",
+    icon: InsertChartOutlined,
+    component: MarketView
+  },
   {
     path: "/dashboard",
     sidebarName: "Dashboard",
@@ -74,7 +83,7 @@ const dashboardRoutes = [
     icon: Unarchive,
     component: UpgradeToPro
   },
-  { redirect: true, path: "/", to: "/dashboard", navbarName: "Redirect" }
+  { redirect: true, path: "/", to: "/market", navbarName: "Redirect" }
 ];
 
 export default dashboardRoutes;
