@@ -2,6 +2,7 @@
 import Dashboard from "@material-ui/icons/Dashboard";
 import Person from "@material-ui/icons/Person";
 import InsertChartOutlined from "@material-ui/icons/InsertChartOutlined";
+import Description from "@material-ui/icons/Description";
 // import ContentPaste from "@material-ui/icons/ContentPaste";
 import LibraryBooks from "@material-ui/icons/LibraryBooks";
 import BubbleChart from "@material-ui/icons/BubbleChart";
@@ -18,6 +19,7 @@ import Maps from "views/Maps/Maps.jsx";
 import NotificationsPage from "views/Notifications/Notifications.jsx";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.jsx";
 import MarketView from "views/Market/MarketView.jsx";
+import TradeInfo from "views/Trade/TradeInfo.jsx";
 
 const dashboardRoutes = [
   {
@@ -26,6 +28,13 @@ const dashboardRoutes = [
     navbarName: "Market View",
     icon: InsertChartOutlined,
     component: MarketView
+  },
+  {
+    path: "/trade",
+    sidebarName: "Trade Info",
+    navbarName: "Trade Info",
+    icon: Description,
+    component: TradeInfo
   },
   {
     path: "/dashboard",

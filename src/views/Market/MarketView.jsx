@@ -186,8 +186,8 @@ class MarketView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: "Gold",
-      period: "SEP16",
+      type: "",
+      period: "",
       category: "",
       page: 0,
       rowsPerPage: 8,
@@ -261,86 +261,75 @@ class MarketView extends React.Component {
     return (
       <div>
         <br />
-        <Card chart>
-          <CardHeader style={{ background: "#37474f" }} />
+        <Card>
+          <CardHeader style={{background:"#37474f"}}/>
           <CardBody>
+            <br/>
+
             <GridContainer xs={12} sm={12} md={12}>
-              <GridItem xs={12} sm={12} md={12} />
-              <Card>
-                <CardBody>
-                  <GridContainer xs={12} sm={12} md={12}>
-                    <GridItem xs={12} sm={12} md={1} />
-                    <GridItem xs={12} sm={12} md={2}>
-                      <FormControl
+              <GridItem xs={12} sm={12} md={8}>
+                <Card chart>
+                  <CardBody>
+                    <FormControl
                         variant="outlined"
-                        style={{ width: "100%", marginTop: "-30px" }}
-                      >
-                        <InputLabel>Category</InputLabel>
-                        <Select
+                        style={{ width: "20%",  }}
+                    >
+                      <InputLabel>Category</InputLabel>
+                      <Select
                           value={this.state.category}
                           onChange={this.handleChangeCategory}
                           input={<OutlinedInput />}
-                        >
-                          <MenuItem value="Metal">Metal</MenuItem>
-                          <MenuItem value="Energy">Energy</MenuItem>
-                          <MenuItem value="Derivatives">Derivatives</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={2}>
-                      <FormControl
-                        variant="outlined"
-                        style={{ width: "100%", marginTop: "-30px" }}
                       >
-                        <InputLabel>Type</InputLabel>
-                        <Select
+                        <MenuItem value="Metal">Metal</MenuItem>
+                        <MenuItem value="Energy">Energy</MenuItem>
+                        <MenuItem value="Derivatives">Derivatives</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl
+                        variant="outlined"
+                        style={{ width: "20%", marginLeft:"2%" }}
+                    >
+                      <InputLabel>Type</InputLabel>
+                      <Select
                           value={this.state.type}
                           onChange={this.handleChangeType}
                           input={<OutlinedInput />}
-                        >
-                          {candidates}
-                        </Select>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={2}>
-                      <FormControl
-                        variant="outlined"
-                        style={{ width: "100%", marginTop: "-30px" }}
                       >
-                        <InputLabel>Period</InputLabel>
-                        <Select
+                        {candidates}
+                      </Select>
+                    </FormControl>
+
+                    <FormControl
+                        variant="outlined"
+                        style={{ width: "20%", marginLeft:"2%" }}
+                    >
+                      <InputLabel>Period</InputLabel>
+                      <Select
                           value={this.state.period}
                           onChange={this.handleChangePeriod}
                           input={<OutlinedInput />}
-                        >
-                          <MenuItem value="SEP16">SEP16</MenuItem>
-                          <MenuItem value="OCT14">OCT14</MenuItem>
-                          <MenuItem value="NOV18">NOV18</MenuItem>
-                        </Select>
-                      </FormControl>
-                    </GridItem>
-                    <GridItem xs={12} sm={12} md={3}>
-                      <Button
+                      >
+                        <MenuItem value="SEP16">SEP16</MenuItem>
+                        <MenuItem value="OCT14">OCT14</MenuItem>
+                        <MenuItem value="NOV18">NOV18</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <Button
                         onClick={this.searchDepth}
                         style={{
                           background: "#37474f",
                           color: "white",
                           fontSize: "18px",
-                          marginTop: "-3%"
+                          marginLeft:"2%"
                         }}
-                      >
-                        <Search />
-                        &nbsp;&nbsp;Search
-                      </Button>
-                    </GridItem>
-                  </GridContainer>
-                </CardBody>
-              </Card>
-            </GridContainer>
-            <GridContainer xs={12} sm={12} md={12}>
-              <GridItem xs={12} sm={12} md={8}>
-                <Card chart>
-                  <CardBody>
+                    >
+                      <Search />
+                      &nbsp;&nbsp;Search
+                    </Button>
+                    <br/>
+                    <h4/>
                     <Table>
                       <TableHead >
                         <tr>
@@ -406,6 +395,8 @@ class MarketView extends React.Component {
                 <Card chart>
                   <CardHeader color="success" style={{fontSize:"16px"}}>Market Depth of {this.state.type}  {this.state.period}</CardHeader>
                   <CardBody>
+
+                    <br/>
                     <Table style={{ border: "1px solid black" }}>
                       <TableHead>
                         <tr>
@@ -475,7 +466,6 @@ class MarketView extends React.Component {
             </GridContainer>
           </CardBody>
         </Card>
-
       </div>
     );
   }
