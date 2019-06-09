@@ -18,6 +18,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
+import Divider from "@material-ui/core/Divider";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 //@material-ui/icons
 import Search from "@material-ui/icons/Search";
@@ -50,6 +51,12 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     marginTop: "20px"
+  },
+  title:{
+    fontWeight: 700,
+    color: "#37474f",
+    marginLeft: "10%",
+    margin:"3%"
   },
   td:{
     width: "4%",
@@ -193,7 +200,18 @@ class MarketView extends React.Component {
       rowsPerPage: 8,
       price_rows:[
         {futureID: "12345", product: "Gold", period: "SEP16", price: "1248", buy_vol: "32", sell_vol: "50"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"}
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
+        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
       ],
       depth_rows: [
         { level1: "", buy_vol: "", price: 1254, sell_vol: 127, level2: 3 },
@@ -260,15 +278,17 @@ class MarketView extends React.Component {
     let candidates = this.handleItems(this.state.category);
     return (
       <div>
-        <br />
-        <Card>
+        <Card style={{marginTop:"0%"}}>
           <CardHeader style={{background:"#37474f"}}/>
           <CardBody>
-            <br/>
-
             <GridContainer xs={12} sm={12} md={12}>
+              <GridItem xs={12} sm={12} md={6}>
+                <h2 className={classes.title}>Real-Time Market View：</h2>
+              </GridItem>
+            </GridContainer>
+            <GridContainer xs={12} sm={12} md={12} >
               <GridItem xs={12} sm={12} md={8}>
-                <Card chart>
+                <Card style={{marginTop:"0%"}}>
                   <CardBody>
                     <FormControl
                         variant="outlined"

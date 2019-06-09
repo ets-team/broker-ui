@@ -74,7 +74,8 @@ const styles = theme => ({
   title:{
     fontWeight: 700,
     color: "#37474f",
-    marginLeft: "10%"
+    marginLeft: "10%",
+    margin: "3%"
   }
 });
 
@@ -85,10 +86,22 @@ class TradeInfo extends React.Component {
       checked: false,
       orders:[],
       page: 0,
-      rowsPerPage: 10,
+      rowsPerPage: 8,
       rows:[
           {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-          {tradeID: 312080, product: "Gold Swaps", period: "OCT14", price:1228, qty:180, trader1: "Sam Wang", company1: "ABC Crop", side1:"buy", trader2: "SiXian Liu", company2:"Ms", side2:"sell",}
+          {tradeID: 312080, product: "Gold Swaps", period: "OCT14", price:1228, qty:180, trader1: "Sam Wang", company1: "ABC Crop", side1:"buy", trader2: "SiXian Liu", company2:"Ms", side2:"sell",},
+          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
+
       ]
     }
   }
@@ -106,8 +119,7 @@ class TradeInfo extends React.Component {
     const { rows, rowsPerPage, page } = this.state;
     return(
         <div>
-          <br/>
-          <Card >
+          <Card style={{marginTop:"0%"}}>
             <CardHeader style={{background:"#37474f"}}/>
             <CardBody>
               <GridContainer xs={12} sm={12} md={12}>
@@ -116,7 +128,7 @@ class TradeInfo extends React.Component {
                 </GridItem>
               </GridContainer>
               <Divider style={{width:"95%"}}/>
-              <h4/><br/>
+              <br/>
               <GridContainer xs={12} sm={12} md={12}>
                 <GridItem xs={12} sm={12} md={12}>
                   <Table className={classes.table}>
