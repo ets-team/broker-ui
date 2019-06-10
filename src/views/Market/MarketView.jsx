@@ -32,7 +32,9 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import CardFooter from "components/Card/CardFooter.jsx";
+import {future_info} from "variables/variables.jsx";
 import Cookies from "universal-cookie";
+
 
 const cookies = new Cookies();
 const actionsStyles = theme => ({
@@ -188,7 +190,7 @@ const items = {
   Derivatives: ["Copper Option", "Rubber Option"]
 };
 
-
+let websocket = null;
 class MarketView extends React.Component {
   constructor(props) {
     super(props);
@@ -198,32 +200,103 @@ class MarketView extends React.Component {
       category: "",
       page: 0,
       rowsPerPage: 8,
-      price_rows:[
-        {futureID: "12345", product: "Gold", period: "SEP16", price: "1248", buy_vol: "32", sell_vol: "50"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-        {futureID: "12348", product: "Silver", period: "OCT14", price: "1070", buy_vol: "80", sell_vol: "20"},
-      ],
+      price_rows:[],
       depth_rows: [
-        { level1: "", buy_vol: "", price: 1254, sell_vol: 127, level2: 3 },
-        { level1: "", buy_vol: "", price: 1252, sell_vol: 32, level2: 2 },
-        { level1: "", buy_vol: "", price: 1250, sell_vol: 50, level2: 1 },
-        { level1: 1, buy_vol: 90, price: 1248, sell_vol: -1, level2: -1 },
-        { level1: 2, buy_vol: 340, price: 1246, sell_vol: -1, level2: -1 },
-        { level1: 3, buy_vol: 187, price: 1244, sell_vol: -1, level2: -1 }
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" },
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" },
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" },
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" },
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" },
+        { level1: "", buy_vol: "", price: "", sell_vol: "", level2: "" }
       ]
     };
-    //console.log(cookies.get("username"));
+    let future_list = [];
+    console.log("future info: ", future_info)
+    console.log("old future list size:", future_info.length);
+    for(let i=0; i<future_info.length; i++)
+    {
+      let obj = {"future_id" : future_info[i].future_id}
+      future_list.push(obj);
+    }
+    console.log("future_list:", future_list);
 
+    fetch('http://202.120.40.8:30405/market',
+    {
+      method: 'POST',
+      mode: 'cors',
+      headers:{
+        'Accept': '*/*',
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify(future_list)
+    })
+    .then(response => {
+      console.log('Request successful', response);
+      //console.log("status:",response.status);
+      return response.json()
+          .then(result => {
+            console.log("result:", result);
+            for(let i=0; i<result.length; i++) {
+              let sell_price_list = [];
+              let buy_price_list = [];
+              let key_price;
+              let price ;
+              let sell_vol;
+              let buy_vol;
+              for( key_price in result[i]["sell_list"]);
+                sell_price_list.push(parseInt(key_price));
+              for( key_price in result[i]["buy_list"]);
+                buy_price_list.push(parseInt(key_price));
+
+              sell_price_list.sort();
+              buy_price_list.sort();
+              console.log("size：",i, buy_price_list.length);
+              console.log("size：",i, sell_price_list.length);
+              if(sell_price_list.length > 0 ) {
+                price = sell_price_list[0].toString();
+                //console.log("price:", i, price)
+                sell_vol = result[i]["sell_list"][price];
+              }
+              if(buy_price_list.length > 0){
+                buy_vol = result[i]["buy_list"][buy_price_list[buy_price_list.length-1].toString()]
+              }
+              let row = {
+                futureID: result[i].info.future_id,
+                product: future_info[i].name,
+                period: future_info[i].period,
+                price: price,
+                buy_vol: buy_vol,
+                sell_vol: sell_vol
+              };
+              this.state.price_rows.push(row);
+
+            }
+            this.forceUpdate();
+          })
+    })
+
+    let site = "ws://202.120.40.8:30405/websocket/abc";
+    if(websocket === null){
+      websocket = new WebSocket(site);
+    }
+
+    websocket.onopen = function(event){
+      console.log("建立连接成功！");
+    };
+
+    websocket.onmessage = function(event){
+      console.log(event.data);
+    };
+
+    websocket.onclose = function(event){
+      console.log("onclose:",event.data);
+      websocket = null;
+    };
+
+    //连接异常.
+    websocket.onerror = function(event){
+      console.log("onmerror:",event.data);
+    };
   }
 
   handleChangeCategory = e => {
@@ -266,6 +339,78 @@ class MarketView extends React.Component {
 
   handleChangeRowsPerPage = event => {
     this.setState({ page: 0, rowsPerPage: event.target.value });
+  };
+
+  handleViewDepth=(futureID)=>{
+    console.log(futureID);
+    fetch('http://202.120.40.8:30405/market?futureID='+futureID,
+        {
+          method: 'GET',
+          mode: 'cors',
+        })
+        .then(response => {
+          console.log('Request successful', response);
+          //console.log("status:",response.status);
+          return response.json()
+            .then(result => {
+              console.log("result:", result);
+              let buy_list = result["buy_list"];
+              console.log("buy_list:", buy_list);
+              let sell_list = result["sell_list"];
+              this.state.depth_rows.length = 0;
+              //console.log(this.state.depth_rows.length);
+              let row;
+              let sell_price_list = [];
+              let buy_price_list = [];
+              let key_price;
+              for( key_price in sell_list);
+              {
+                //console.log(key_price);
+                sell_price_list.push(parseInt(key_price));
+              }
+              //console.log("sell price list len: ", sell_price_list.length);
+              for( key_price in buy_list);
+              {
+                //console.log(key_price);
+                buy_price_list.push(parseInt(key_price));
+              }
+              //console.log("buy price list len: ", buy_price_list.length);
+              sell_price_list.sort();
+              buy_price_list.sort();
+              for(let i=3; i>0; i--){
+                if(sell_price_list.length >= i) {
+                  row = {
+                    level1: "",
+                    buy_vol: "",
+                    price: sell_price_list[i - 1],
+                    sell_vol: sell_list[sell_price_list[i - 1].toString()],
+                    level2: i
+                  }
+                }
+                else{
+                  row={level1: "", buy_vol: "", price: "", sell_vol: "", level2: i}
+                }
+                this.state.depth_rows.push(row);
+              }
+              for(let i=1; i<4; i++){
+                if(buy_price_list.length >= i) {
+                  row = {
+                    level1: i,
+                    buy_vol: buy_list[buy_price_list[i - 1].toString()],
+                    price: buy_price_list[i - 1],
+                    sell_vol: "",
+                    level2: ""
+                  }
+                }
+                else{
+                  row={level1: i, buy_vol: "", price: "", sell_vol: "", level2: ""}
+                }
+                this.state.depth_rows.push(row);
+                this.forceUpdate();
+                console.log(this.state.depth_rows);
+              }
+            })
+        })
   };
 
 
@@ -373,8 +518,8 @@ class MarketView extends React.Component {
                         </tr>
                       </TableHead>
                       <TableBody>
-                        {this.state.price_rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => (
-                            <tr>
+                        {this.state.price_rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,key) => (
+                            <tr key={row.futureID}>
                                 <td className={classes.sort_td} >{row.futureID}</td>
                                 <td className={classes.td} >{row.product}</td>
                                 <td className={classes.td} >{row.period}</td>
@@ -382,7 +527,7 @@ class MarketView extends React.Component {
                                 <td className={classes.td} >{row.buy_vol}</td>
                                 <td className={classes.td} >{row.sell_vol}</td>
                                 <td className={classes.td} >
-                                  <Button style={{color:"#455a64"}}>
+                                  <Button style={{color:"#455a64"}} onClick={()=>this.handleViewDepth(row.futureID)}>
                                     <RemoveRedEye/>
                                   </Button>
                                 </td>
@@ -430,51 +575,30 @@ class MarketView extends React.Component {
                       <TableBody>
                         {this.state.depth_rows.map(row => (
                             <tr>
-                              <td
-                                  className={classes.level}
-                                  style={{ background: "#bbdefb" }}
-                              >
-                                {row.level1 > 0 ? row.level1 : ""}
+                              <td className={classes.level} style={{ background: "#bbdefb" }}>
+                                {row.level1}
                               </td>
-                              <td
-                                  className={classes.vol}
-                                  style={{ background: "#bbdefb" }}
-                              >
-                                {row.buy_vol > 0 ? row.buy_vol : ""}
+                              <td className={classes.vol} style={{ background: "#bbdefb" }}>
+                                {row.buy_vol}
                               </td>
                               {row.level1 > 0 ? (
-                                  <td
-                                      className={classes.price}
-                                      style={{ background: "#9e9e9e", color: "#ad1457" }}
-                                  >
+                                  <td className={classes.price} style={{ background: "#9e9e9e", color: "#ad1457" }}>
                                     {row.price}
                                   </td>
                               ) : row.level2 === 1 ? (
-                                  <td
-                                      className={classes.price}
-                                      style={{ background: "#fff59d", color: "#01579b" }}
-                                  >
+                                  <td className={classes.price} style={{ background: "#fff59d", color: "#01579b" }}>
                                     {row.price}
                                   </td>
                               ) : (
-                                  <td
-                                      className={classes.price}
-                                      style={{ background: "#9e9e9e", color: "#01579b" }}
-                                  >
+                                  <td className={classes.price} style={{ background: "#9e9e9e", color: "#01579b" }}>
                                     {row.price}
                                   </td>
                               )}
-                              <td
-                                  className={classes.vol}
-                                  style={{ background: "#f8bbd0" }}
-                              >
-                                {row.sell_vol > 0 ? row.sell_vol : ""}
+                              <td className={classes.vol} style={{ background: "#f8bbd0" }}>
+                                {row.sell_vol}
                               </td>
-                              <td
-                                  className={classes.level}
-                                  style={{ background: "#f8bbd0" }}
-                              >
-                                {row.level2 > 0 ? row.level2 : ""}
+                              <td className={classes.level} style={{ background: "#f8bbd0" }}>
+                                {row.level2}
                               </td>
                             </tr>
                         ))}

@@ -21,7 +21,7 @@ import NotificationsPage from "views/Notifications/Notifications.jsx";
 import UpgradeToPro from "views/UpgradeToPro/UpgradeToPro.jsx";
 import MarketView from "views/Market/MarketView.jsx";
 import TradeInfo from "views/Trade/TradeInfo.jsx";
-import OrderState from "views/Order/OrderState.jsx";
+import OrderBook from "views/Order/OrderBook.jsx";
 
 const dashboardRoutes = [
   {
@@ -33,10 +33,10 @@ const dashboardRoutes = [
   },
   {
     path: "/order",
-    sidebarName: "Order State",
-    navbarName: "Order State",
+    sidebarName: "Order Book",
+    navbarName: "Order Book",
     icon: Description,
-    component: OrderState
+    component: OrderBook
   },
   {
     path: "/trade",

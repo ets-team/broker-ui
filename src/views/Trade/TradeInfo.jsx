@@ -16,6 +16,7 @@ import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import Cookies from "universal-cookie";
+import name_company from "variables/variables.jsx";
 
 const cookies = new Cookies();
 const actionsStyles = theme => ({
@@ -79,6 +80,7 @@ const styles = theme => ({
   }
 });
 
+let websocket = null;
 class TradeInfo extends React.Component {
   constructor(props) {
     super(props);
@@ -104,6 +106,47 @@ class TradeInfo extends React.Component {
 
       ]
     }
+
+    let site = "ws://202.120.40.8:30405/websocket/trade";
+    if(websocket === null){
+      websocket = new WebSocket(site);
+    }
+
+    websocket.onopen = function(event){
+      console.log("建立连接成功！");
+    };
+
+    websocket.onmessage = function(event){
+      console.log(event.data);
+      if(event.data.type === "deal_message")
+      {
+        let trader1= "";
+        let trader2= "";
+        /*this.state.rows.unshift({
+          tradeID: 312345,
+          product: "Gold Swaps",
+          period: "SEP16",
+          price:1246,
+          qty:50,
+          trader1: "Sam Wang",
+          company1: name_company[trader1],
+          side1:"sell",
+          trader2: name_company[trader2],
+          company2:"Ms",
+          side2:"buy"
+        })*/
+      }
+    };
+
+    websocket.onclose = function(event){
+      console.log("onclose:",event.data);
+      websocket = null;
+    };
+
+    //连接异常.
+    websocket.onerror = function(event){
+      console.log("onmerror:",event.data);
+    };
   }
 
   handleChangePage = (event, page) => {

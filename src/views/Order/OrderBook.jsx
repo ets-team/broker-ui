@@ -17,6 +17,7 @@ import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
 import Cookies from "universal-cookie";
 
+
 const cookies = new Cookies();
 const actionsStyles = theme => ({
   root: {
@@ -60,7 +61,9 @@ const styles = theme => ({
   }
 });
 
-class OrderState extends React.Component {
+let websocket = null;
+
+class OrderBook extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -88,7 +91,39 @@ class OrderState extends React.Component {
         {order_id:"12125", type:"Stop", trader:"79", product:"Gold SEP16", qty:"70", price:"1400", old_id:"/" },
         {order_id:"12126", type:"Cancel", trader:"198",  product:"Gold SEP16", qty:"/", price:"/", old_id:"10109" },
       ]
+    };
+
+    let site = "ws://202.120.40.8:30405/websocket/def";
+    if(websocket === null){
+      websocket = new WebSocket(site);
     }
+
+    websocket.onopen = function(event){
+      console.log("建立连接成功！");
+    };
+
+    websocket.onmessage = function(event){
+      console.log(event.data);
+      if(event.data.type === "order_process_message") {
+
+      }
+      else if (event.data.type === "deal_message") {
+
+      }
+      else {
+
+      }
+    };
+
+    websocket.onclose = function(event){
+      console.log("onclose:",event.data);
+    };
+
+    //连接异常.
+    websocket.onerror = function(event){
+      console.log("onmerror:",event.data);
+      websocket = null;
+    };
   }
 
   handleChangePage = (event, page) => {
@@ -109,7 +144,7 @@ class OrderState extends React.Component {
             <CardBody>
               <GridContainer xs={12} sm={12} md={12}>
                 <GridItem xs={12} sm={12} md={6}>
-                  <h2 className={classes.title}>Real-Time Order State：</h2>
+                  <h2 className={classes.title}>Real-Time Order Book：</h2>
                 </GridItem>
               </GridContainer>
               <br/>
@@ -188,4 +223,4 @@ class OrderState extends React.Component {
   }
 }
 
-export default withStyles(styles)(OrderState);
+export default withStyles(styles)(OrderBook);
