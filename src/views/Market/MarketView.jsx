@@ -199,6 +199,7 @@ class MarketView extends React.Component {
       period: "",
       category: "",
       page: 0,
+      future_id: "",
       rowsPerPage: 8,
       price_rows:[],
       depth_rows: [
@@ -286,6 +287,7 @@ class MarketView extends React.Component {
 
     websocket.onmessage = function(event){
       console.log(event.data);
+
     };
 
     websocket.onclose = function(event){
@@ -343,6 +345,9 @@ class MarketView extends React.Component {
 
   handleViewDepth=(futureID)=>{
     console.log(futureID);
+    this.setState({
+      future_id: futureID
+    });
     fetch('http://202.120.40.8:30405/market?futureID='+futureID,
         {
           method: 'GET',

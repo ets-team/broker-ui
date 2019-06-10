@@ -2,12 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="398b7626-24d6-488f-859c-76951b8e6584" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/variables/variables.jsx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/routes/dashboard.jsx" afterPath="$PROJECT_DIR$/src/routes/dashboard.jsx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/Market/MarketView.jsx" afterPath="$PROJECT_DIR$/src/views/Market/MarketView.jsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/Order/OrderBook.jsx" afterPath="$PROJECT_DIR$/src/views/Order/OrderBook.jsx" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx" afterPath="$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/views/Order/OrderState.jsx" afterPath="$PROJECT_DIR$/src/views/Order/OrderBook.jsx" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -71,11 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="OrderBook.jsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="OrderBook.jsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/views/Order/OrderBook.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6468">
-              <caret line="114" column="6" lean-forward="false" selection-start-line="114" selection-start-column="6" selection-end-line="114" selection-end-column="6" />
+            <state relative-caret-position="0">
+              <caret line="81" column="6" lean-forward="false" selection-start-line="81" selection-start-column="6" selection-end-line="81" selection-end-column="6" />
               <folding>
                 <element signature="e#38#64#0" expanded="true" />
               </folding>
@@ -83,11 +80,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MarketView.jsx" pinned="false" current-in-tab="true">
+      <file leaf-file-name="MarketView.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/Market/MarketView.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="268" column="34" lean-forward="true" selection-start-line="268" selection-start-column="34" selection-end-line="268" selection-end-column="34" />
+            <state relative-caret-position="-4695">
+              <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0" />
               <folding>
                 <element signature="e#201#255#0" expanded="true" />
                 <element signature="e#1036#1083#0" expanded="true" />
@@ -100,8 +97,8 @@
       <file leaf-file-name="TradeInfo.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="8250">
-              <caret line="142" column="23" lean-forward="false" selection-start-line="142" selection-start-column="23" selection-end-line="142" selection-end-column="23" />
+            <state relative-caret-position="-2423">
+              <caret line="123" column="7" lean-forward="true" selection-start-line="123" selection-start-column="7" selection-end-line="123" selection-end-column="7" />
               <folding>
                 <element signature="e#38#64#0" expanded="true" />
               </folding>
@@ -112,8 +109,8 @@
       <file leaf-file-name="variables.jsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/variables/variables.jsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2046">
-              <caret line="33" column="14" lean-forward="false" selection-start-line="33" selection-start-column="14" selection-end-line="33" selection-end-column="14" />
+            <state relative-caret-position="462">
+              <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
               <folding>
                 <element signature="e#0#38#0" expanded="false" />
               </folding>
@@ -153,10 +150,10 @@
         <option value="$PROJECT_DIR$/src/variables/websocket.js" />
         <option value="$PROJECT_DIR$/src/variables/websocket.jsx" />
         <option value="$PROJECT_DIR$/src/variables/utils.js" />
-        <option value="$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx" />
-        <option value="$PROJECT_DIR$/src/views/Order/OrderBook.jsx" />
         <option value="$PROJECT_DIR$/src/variables/variables.jsx" />
         <option value="$PROJECT_DIR$/src/views/Market/MarketView.jsx" />
+        <option value="$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx" />
+        <option value="$PROJECT_DIR$/src/views/Order/OrderBook.jsx" />
       </list>
     </option>
   </component>
@@ -299,6 +296,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="Order" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="broker-ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="broker-ui" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Notifications" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -539,25 +558,25 @@
       <workItem from="1555300163420" duration="867000" />
       <workItem from="1557804407210" duration="757000" />
       <workItem from="1559989570694" duration="42368000" />
-      <workItem from="1560151992453" duration="12809000" />
+      <workItem from="1560151992453" duration="20182000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="56801000" />
+    <option name="totallyTimeSpent" value="64174000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-16" y="-16" width="3232" height="1732" extended-state="0" />
+    <frame x="-16" y="-16" width="3232" height="1732" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17732742" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32395333" sideWeight="0.5012666" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32395333" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32395333" sideWeight="0.49873337" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -723,30 +742,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8250">
-          <caret line="142" column="23" lean-forward="false" selection-start-line="142" selection-start-column="23" selection-end-line="142" selection-end-column="23" />
-          <folding>
-            <element signature="e#38#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/views/Order/OrderBook.jsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6468">
-          <caret line="114" column="6" lean-forward="false" selection-start-line="114" selection-start-column="6" selection-end-line="114" selection-end-column="6" />
-          <folding>
-            <element signature="e#38#64#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/variables/variables.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2046">
-          <caret line="33" column="14" lean-forward="false" selection-start-line="33" selection-start-column="14" selection-end-line="33" selection-end-column="14" />
+        <state relative-caret-position="462">
+          <caret line="9" column="3" lean-forward="true" selection-start-line="9" selection-start-column="3" selection-end-line="9" selection-end-column="3" />
           <folding>
             <element signature="e#0#38#0" expanded="false" />
           </folding>
@@ -755,12 +754,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/views/Market/MarketView.jsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="268" column="34" lean-forward="true" selection-start-line="268" selection-start-column="34" selection-end-line="268" selection-end-column="34" />
+        <state relative-caret-position="-4695">
+          <caret line="289" column="0" lean-forward="false" selection-start-line="289" selection-start-column="0" selection-end-line="289" selection-end-column="0" />
           <folding>
             <element signature="e#201#255#0" expanded="true" />
             <element signature="e#1036#1083#0" expanded="true" />
             <element signature="e#1269#1321#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/Trade/TradeInfo.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2423">
+          <caret line="123" column="7" lean-forward="true" selection-start-line="123" selection-start-column="7" selection-end-line="123" selection-end-column="7" />
+          <folding>
+            <element signature="e#38#64#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/views/Order/OrderBook.jsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="81" column="6" lean-forward="false" selection-start-line="81" selection-start-column="6" selection-end-line="81" selection-end-column="6" />
+          <folding>
+            <element signature="e#38#64#0" expanded="true" />
           </folding>
         </state>
       </provider>

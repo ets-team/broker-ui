@@ -87,6 +87,8 @@ class TradeInfo extends React.Component {
     this.state = {
       checked: false,
       orders:[],
+      futureName:"",
+      period:"",
       page: 0,
       rowsPerPage: 8,
       rows:[
@@ -106,6 +108,21 @@ class TradeInfo extends React.Component {
 
       ]
     }
+
+    fetch('http://202.120.40.8:30405/broker_tradehistory?futureName='+this.state.futureName + '&period='+this.state.period,
+    {
+      method: 'GET',
+      mode: 'cors',
+    })
+    .then(response => {
+      console.log('Request successful', response);
+      //console.log("status:",response.status);
+      return response.json()
+          .then(result => {
+            console.log(result);
+          })
+    });
+
 
     let site = "ws://202.120.40.8:30405/websocket/trade";
     if(websocket === null){

@@ -71,27 +71,30 @@ class OrderBook extends React.Component {
       orders:[],
       page: 0,
       rowsPerPage: 8,
+      futureName:"OIL",
+      period:"JULY16",
       pending_rows:[
         {order_id:"12123", type:"Market", trader:"123", product:"Gold SEP16", qty:"30", price:"/", old_id:"/" },
-        {order_id:"12124", type:"Limit", trader:"120", product:"Gold SEP16", qty:"180", price:"1248", old_id:"/" },
-        {order_id:"12125", type:"Stop", trader:"79", product:"Gold SEP16", qty:"70", price:"1400", old_id:"/" },
-        {order_id:"12126", type:"Cancel", trader:"198",  product:"Gold SEP16", qty:"/", price:"/", old_id:"10109" },
-        {order_id:"12123", type:"Market", trader:"123", product:"Gold SEP16", qty:"30", price:"/", old_id:"/" },
-        {order_id:"12124", type:"Limit", trader:"120", product:"Gold SEP16", qty:"180", price:"1248", old_id:"/" },
-        {order_id:"12125", type:"Stop", trader:"79", product:"Gold SEP16", qty:"70", price:"1400", old_id:"/" },
-        {order_id:"12126", type:"Cancel", trader:"198",  product:"Gold SEP16", qty:"/", price:"/", old_id:"10109" },
-      ],
+        ],
       transacted_rows:[
-        {order_id:"12123", type:"Market", trader:"123", product:"Gold SEP16", qty:"30", price:"/", old_id:"/" },
-        {order_id:"12124", type:"Limit", trader:"120", product:"Gold SEP16", qty:"180", price:"1248", old_id:"/" },
-        {order_id:"12125", type:"Stop", trader:"79", product:"Gold SEP16", qty:"70", price:"1400", old_id:"/" },
-        {order_id:"12126", type:"Cancel", trader:"198",  product:"Gold SEP16", qty:"/", price:"/", old_id:"10109" },
-        {order_id:"12123", type:"Market", trader:"123", product:"Gold SEP16", qty:"30", price:"/", old_id:"/" },
-        {order_id:"12124", type:"Limit", trader:"120", product:"Gold SEP16", qty:"180", price:"1248", old_id:"/" },
-        {order_id:"12125", type:"Stop", trader:"79", product:"Gold SEP16", qty:"70", price:"1400", old_id:"/" },
-        {order_id:"12126", type:"Cancel", trader:"198",  product:"Gold SEP16", qty:"/", price:"/", old_id:"10109" },
-      ]
+        {trade_id:"", order_id:"12123", buy_order_id:"", seller_id:"123", sell_order_id:"", product:"Gold SEP16", qty:"30", price:"/"},
+        ]
     };
+
+
+    fetch('http://202.120.40.8:30405/broker_tradehistory?futureName='+this.state.futureName + '&period='+this.state.period,
+        {
+          method: 'GET',
+          mode: 'cors',
+        })
+        .then(response => {
+          console.log('Request successful', response);
+          //console.log("status:",response.status);
+          return response.json()
+              .then(result => {
+                console.log(result);
+              })
+        });
 
     let site = "ws://202.120.40.8:30405/websocket/def";
     if(websocket === null){
@@ -105,15 +108,54 @@ class OrderBook extends React.Component {
     websocket.onmessage = function(event){
       console.log(event.data);
       if(event.data.type === "order_process_message") {
-
+        let type;
+        if(event.data.type === "l")
+          type = "Limit";
+        else if(event.data.type === "m")
+          type = "Market";
+        else if (event.data.type === "s")
+          type = "Stop";
+        this.state.pending_rows.unshift({
+          order_id: event.data.orderID,
+          type: type,
+          trader: event.data.traderID,
+          product: "OIL JULY16",//--------------------------!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+          qty: event.data.amount,
+          price: event.data.price,
+          old_id: "/"
+        });
+      }
+      else if(event.data.type === "cancel_message"){
+        this.state.pending_rows.unshift({
+          order_id: event.data.order_id,
+          type: "Cancel",
+          trader: event.data.traderID,
+          product: "/",
+          qty: "/",
+          price: "/",
+          old_id: event.data.cancel_id,
+        });
       }
       else if (event.data.type === "deal_message") {
-
+        this.state.transacted_rows.unshift({
+          trade_id: event.data.tradeID,
+          buyer_id: event.data.buyer_name,
+          buy_order_id: event.data.buyer_order_id,
+          seller_id: event.data.seller_name,
+          sell_order_id: event.data.seller_order_id,
+          product: event.data.future_name + " " + event.data.period,
+          qty: event.data.qty,
+          price: event.data.price,
+        })
       }
-      else {
-
-      }
-    };
+      //this.forceUpdate();
+      //judge whether delete the last element in order book
+      /*while(this.state.pending_rows.length > 10)
+          this.state.pending_rows.pop();
+      while(this.state.transacted_rows.length > 10)
+          this.state.transacted_rows.pop();*/
+    }
+    ;
 
     websocket.onclose = function(event){
       console.log("onclose:",event.data);
@@ -129,6 +171,7 @@ class OrderBook extends React.Component {
   handleChangePage = (event, page) => {
     this.setState({ page });
   };
+
 
   handleChangeRowsPerPage = event => {
     this.setState({ page: 0, rowsPerPage: event.target.value });
@@ -189,25 +232,27 @@ class OrderBook extends React.Component {
                       <Table>
                         <TableHead>
                           <tr>
-                            <td className={classes.td} style={{width:'3%'}}>Order ID</td>
-                            <td className={classes.td} style={{width:'2%'}}>Type</td>
-                            <td className={classes.td} style={{width:'3%'}}>Trader ID</td>
+                            <td className={classes.td} style={{width:'3%'}}>Trade ID</td>
+                            <td className={classes.td} style={{width:'2%'}}>Buyer </td>
+                            <td className={classes.td} style={{width:'3%'}}>Buy Order</td>
+                            <td className={classes.td} style={{width:'2%'}}>Seller </td>
+                            <td className={classes.td} style={{width:'3%'}}>Sell Order</td>
                             <td className={classes.td} style={{width:'4%'}}>Product</td>
                             <td className={classes.td} style={{width:'2%'}}>Qty</td>
                             <td className={classes.td} style={{width:'2%'}}>Price</td>
-                            <td className={classes.td} style={{width:'3%'}}>Old ID</td>
                           </tr>
                         </TableHead>
                         <TableBody>
                           {this.state.transacted_rows.map(row => (
                               <tr>
-                                <td className={classes.content_td} style={{width:'3%'}}>{row.order_id}</td>
-                                <td className={classes.content_td} style={{width:'2%'}}>{row.type}</td>
-                                <td className={classes.content_td} style={{width:'3%'}}>{row.trader}</td>
+                                <td className={classes.content_td} style={{width:'3%'}}>{row.trade_id}</td>
+                                <td className={classes.content_td} style={{width:'2%'}}>{row.buyer_id}</td>
+                                <td className={classes.content_td} style={{width:'3%'}}>{row.buyer_order_id}</td>
+                                <td className={classes.content_td} style={{width:'2%'}}>{row.seller_id}</td>
+                                <td className={classes.content_td} style={{width:'3%'}}>{row.sell_order_id}</td>
                                 <td className={classes.content_td} style={{width:'4%'}}>{row.product}</td>
                                 <td className={classes.content_td} style={{width:'2%'}}>{row.qty}</td>
                                 <td className={classes.content_td} style={{width:'2%'}}>{row.price}</td>
-                                <td className={classes.content_td} style={{width:'3%'}}>{row.old_id}</td>
                               </tr>
                           ))}
                         </TableBody>
