@@ -9,9 +9,16 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TablePagination from "@material-ui/core/TablePagination";
 import TablePaginationActions from "components/Table/TablePagnition";
-import Divider from '@material-ui/core/Divider';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Divider from '@material-ui/core/Divider';
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import OutlinedInput from "@material-ui/core/OutlinedInput";
+import Button from "@material-ui/core/Button";
+import Search from "@material-ui/icons/Search";
+import MenuItem from "@material-ui/core/MenuItem";
+import FormControl from "@material-ui/core/FormControl";
 import Card from "components/Card/Card.jsx";
 import CardHeader from "components/Card/CardHeader.jsx";
 import CardBody from "components/Card/CardBody.jsx";
@@ -80,6 +87,13 @@ const styles = theme => ({
   }
 });
 
+const items = {
+  "": [],
+  Metal: ["GOLD", "SILVER", "COPPER"],
+  Energy: ["OIL", "PITCH", "RUBBER"],
+  Derivatives: ["Copper Option", "Rubber Option"]
+};
+
 let websocket = null;
 class TradeInfo extends React.Component {
   constructor(props) {
@@ -90,39 +104,12 @@ class TradeInfo extends React.Component {
       futureName:"",
       period:"",
       page: 0,
+      type: "",
+      category: "",
+      product:"",
       rowsPerPage: 8,
-      rows:[
-          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-          {tradeID: 312080, product: "Gold Swaps", period: "OCT14", price:1228, qty:180, trader1: "Sam Wang", company1: "ABC Crop", side1:"buy", trader2: "SiXian Liu", company2:"Ms", side2:"sell",},
-          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-          {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-        {tradeID: 312345, product: "Gold Swaps", period: "SEP16", price:1246, qty:50, trader1: "Sam Wang", company1: "ABC Crop", side1:"sell", trader2: "SiXian Liu", company2:"Ms", side2:"buy",},
-
-      ]
+      rows:[]
     }
-
-    fetch('http://202.120.40.8:30405/broker_tradehistory?futureName='+this.state.futureName + '&period='+this.state.period,
-    {
-      method: 'GET',
-      mode: 'cors',
-    })
-    .then(response => {
-      console.log('Request successful', response);
-      //console.log("status:",response.status);
-      return response.json()
-          .then(result => {
-            console.log(result);
-          })
-    });
-
 
     let site = "ws://202.120.40.8:30405/websocket/trade";
     if(websocket === null){
@@ -133,25 +120,30 @@ class TradeInfo extends React.Component {
       console.log("建立连接成功！");
     };
 
-    websocket.onmessage = function(event){
+    websocket.onmessage = (event)=>{
       console.log(event.data);
-      if(event.data.type === "deal_message")
-      {
-        let trader1= "";
-        let trader2= "";
-        /*this.state.rows.unshift({
-          tradeID: 312345,
-          product: "Gold Swaps",
-          period: "SEP16",
-          price:1246,
-          qty:50,
-          trader1: "Sam Wang",
-          company1: name_company[trader1],
-          side1:"sell",
-          trader2: name_company[trader2],
-          company2:"Ms",
-          side2:"buy"
-        })*/
+      if(event.data !== "Connected") {
+        let obj = JSON.parse(event.data);
+        if (obj.msg_type === "deal_message") {
+          let trader1 = "";
+          let trader2 = "";
+          console.log("hello");
+
+          this.state.rows.unshift({
+            tradeID: obj.tradeID,
+            product: "OIL JULY16",
+            period: obj.period,
+            price: obj.price,
+            qty: obj.qty,
+            trader1: obj.buyer_name,
+            company1: "MS",
+            side1: "sell",
+            trader2: obj.seller_name,
+            company2: "ABC Crop",
+            side2: "buy"
+          })
+          this.forceUpdate();
+        }
       }
     };
 
@@ -174,9 +166,96 @@ class TradeInfo extends React.Component {
     this.setState({ page: 0, rowsPerPage: event.target.value });
   };
 
+  handleChangeCategory = e => {
+    console.log(e.target.value);
+    this.setState({
+      category: e.target.value,
+      type: ""
+    });
+  };
+
+  handleChangeType = e => {
+    console.log(e.target.value);
+    this.setState({
+      type: e.target.value,
+    });
+  };
+
+  handleChangePeriod = e => {
+    console.log(e.target.value);
+    this.setState({
+      period: e.target.value,
+    });
+  };
+
+  handleItems = category => {
+    let selections = items[category];
+    let result = [];
+    for (let i = 0; i < selections.length; i++)
+      result.push(<MenuItem value={selections[i]}>{selections[i]}</MenuItem>);
+    return result;
+  };
+
+  searchTradingInfo=()=>{
+    /*fetch('http://202.120.40.8:30405/broker_tradehistory?futureName='+this.state.type + '&period='+this.state.period,
+        {
+          method: 'GET',
+          mode: 'cors',
+        })
+        .then(response => {
+          console.log('Request successful', response);
+          //console.log("status:",response.status);
+          return response.json()
+              .then(result => {
+                console.log(result);
+                this.state.rows.length = 0;
+                let trader1;
+                let trader2;
+                let order1;
+                let order2;
+                let side1;
+                let side2;
+                for(let i=0; i<result.length; i++){
+                  if(result[i]["initiator_side"] === "b"){
+                    trader1 = result[i]["buyer_name"];
+                    trader2 = result[i]["seller_name"];
+                    order1 = result[i]["buyer_order_id"];
+                    order2 = result[i]["seller_order_id"];
+                    side1 = "buy";
+                    side2 = "sell";
+                  }
+                  else{
+                    trader1 = result[i]["seller_name"];
+                    trader2 = result[i]["buyer_name"];
+                    order1 = result[i]["seller_order_id"];
+                    order2 = result[i]["buyer_order_id"];
+                    side1 = "sell";
+                    side2 = "buy";
+                  }
+                  this.state.rows.push({
+                    tradeID: result[i]["tradeID"],
+                    product: result[i]["future_name"],
+                    period: result[i]["period"],
+                    price:result[i]["price"],
+                    qty:result[i]["qty"],
+                    trader1: trader1,
+                    company1: order1,
+                    side1: side1,
+                    trader2: trader2 ,
+                    company2:order2,
+                    side2: side2,
+                  })
+                }
+                console.log(this.state.rows.length);
+                this.forceUpdate();
+              })
+        });*/
+  }
+
   render(){
     const {classes} = this.props;
     const { rows, rowsPerPage, page } = this.state;
+    let candidates = this.handleItems(this.state.category);
     return(
         <div>
           <Card style={{marginTop:"0%"}}>
@@ -189,6 +268,67 @@ class TradeInfo extends React.Component {
               </GridContainer>
               <Divider style={{width:"95%"}}/>
               <br/>
+
+              <FormControl
+                  variant="outlined"
+                  style={{ width: "15%", marginLeft:"37%" }}
+              >
+                <InputLabel>Category</InputLabel>
+                <Select
+                    value={this.state.category}
+                    onChange={this.handleChangeCategory}
+                    input={<OutlinedInput />}
+                >
+                  <MenuItem value="Metal">Metal</MenuItem>
+                  <MenuItem value="Energy">Energy</MenuItem>
+                  <MenuItem value="Derivatives">Derivatives</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl
+                  variant="outlined"
+                  style={{ width: "15%", marginLeft:"1%" }}
+              >
+                <InputLabel>Type</InputLabel>
+                <Select
+                    value={this.state.type}
+                    onChange={this.handleChangeType}
+                    input={<OutlinedInput />}
+                >
+                  {candidates}
+                </Select>
+              </FormControl>
+
+              <FormControl
+                  variant="outlined"
+                  style={{ width: "15%", marginLeft:"1%" }}
+              >
+                <InputLabel>Period</InputLabel>
+                <Select
+                    value={this.state.period}
+                    onChange={this.handleChangePeriod}
+                    input={<OutlinedInput />}
+                >
+                  <MenuItem value="JULY16">JULY16</MenuItem>
+                  <MenuItem value="AUG16">AUG16</MenuItem>
+                  <MenuItem value="SEP16">SEP16</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                  onClick={this.searchTradingInfo}
+                  style={{
+                    background: "#37474f",
+                    color: "white",
+                    fontSize: "18px",
+                    marginLeft:"1%"
+                  }}
+              >
+                <Search />
+                &nbsp;&nbsp;Search
+              </Button>
+              <br/>
+              <h1/>
               <GridContainer xs={12} sm={12} md={12}>
                 <GridItem xs={12} sm={12} md={12}>
                   <Table className={classes.table}>

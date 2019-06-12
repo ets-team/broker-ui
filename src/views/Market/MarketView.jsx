@@ -185,10 +185,22 @@ const styles = theme => ({
 
 const items = {
   "": [],
-  Metal: ["Gold", "Silver", "Copper", "Aluminium", "Zinc", "Lead", "Nickel", "Tin"],
-  Energy: ["Crude Oil", "Fuel Oil", "Pitch", "Rubber"],
+  Metal: ["GOLD", "SILVER", "COPPER"],
+  Energy: ["OIL", "PITCH", "RUBBER"],
   Derivatives: ["Copper Option", "Rubber Option"]
 };
+
+const product_futureid={
+  "OILJULY16": 1,
+  "OILAUG16":2,
+  "GOLDJULY16":3,
+  "SILVERJULY16":4,
+};
+
+function strToJson(str){
+  var json = (new Function("return " + str))();
+  return json;
+}
 
 let websocket = null;
 class MarketView extends React.Component {
@@ -198,6 +210,7 @@ class MarketView extends React.Component {
       type: "",
       period: "",
       category: "",
+      product:"OILJULY716",
       page: 0,
       future_id: "",
       rowsPerPage: 8,
@@ -238,17 +251,12 @@ class MarketView extends React.Component {
           .then(result => {
             console.log("result:", result);
             for(let i=0; i<result.length; i++) {
-              let sell_price_list = [];
-              let buy_price_list = [];
+              let sell_price_list = Object.keys(result[i]["sell_list"]);
+              let buy_price_list = Object.keys(result[i]["buy_list"]);
               let key_price;
               let price ;
               let sell_vol;
               let buy_vol;
-              for( key_price in result[i]["sell_list"]);
-                sell_price_list.push(parseInt(key_price));
-              for( key_price in result[i]["buy_list"]);
-                buy_price_list.push(parseInt(key_price));
-
               sell_price_list.sort();
               buy_price_list.sort();
               console.log("size：",i, buy_price_list.length);
@@ -270,7 +278,6 @@ class MarketView extends React.Component {
                 sell_vol: sell_vol
               };
               this.state.price_rows.push(row);
-
             }
             this.forceUpdate();
           })
@@ -285,8 +292,67 @@ class MarketView extends React.Component {
       console.log("建立连接成功！");
     };
 
-    websocket.onmessage = function(event){
-      console.log(event.data);
+    websocket.onmessage = (event)=>{
+      console.log("message:",event.data);
+      if(event.data !== "Connected") {
+        let obj = strToJson(event.data);
+        console.log("type:",obj.msg_type);
+        if (obj.msg_type === "market_depth") {
+          console.log("hello");
+          let future_id = obj.info.future_id;
+          console.log("future_id:",future_id);
+          let sell_list = obj["sell_list"];
+          let sell_price_list = Object.keys(sell_list);
+          sell_price_list.sort();
+          for (let i = 0; i < 4; i++) {
+            if (this.state.price_rows[i].future_id === future_id) {
+              this.state.price_rows[i].price = sell_price_list[0];
+              console.log(this.state.price_rows[i]["price"])
+            }
+          }
+          this.state.depth_rows.length=0;
+
+          let product = this.state.product;
+          console.log("product", product);
+          if (future_id === product_futureid[product]) {
+            let buy_list = obj["buy_list"];
+            let buy_price_list = Object.keys(buy_list);
+            buy_price_list.sort();
+            let row;
+            for (let i = 3; i > 0; i--) {
+              if (sell_price_list.length >= i) {
+                row = {
+                  level1: "",
+                  buy_vol: "",
+                  price: sell_price_list[i - 1],
+                  sell_vol: sell_list[sell_price_list[i - 1].toString()],
+                  level2: i
+                }
+              }
+              else {
+                row = {level1: "", buy_vol: "", price: "", sell_vol: "", level2: i}
+              }
+              this.state.depth_rows.push(row);
+            }
+            for (let i = 3; i >= 1; i--) {
+              if (buy_price_list.length >= i) {
+                row = {
+                  level1: i,
+                  buy_vol: buy_list[buy_price_list[i - 1].toString()],
+                  price: buy_price_list[i - 1],
+                  sell_vol: "",
+                  level2: ""
+                }
+              }
+              else {
+                row = {level1: i, buy_vol: "", price: "", sell_vol: "", level2: ""}
+              }
+              this.state.depth_rows.push(row);
+              this.forceUpdate();
+            }
+          }
+        }
+      }
 
     };
 
@@ -312,14 +378,16 @@ class MarketView extends React.Component {
   handleChangeType = e => {
     console.log(e.target.value);
     this.setState({
-      type: e.target.value
+      type: e.target.value,
+      product: e.target.value+ " " + this.state.period
     });
   };
 
   handleChangePeriod = e => {
     console.log(e.target.value);
     this.setState({
-      period: e.target.value
+      period: e.target.value,
+      product: this.state.type + " " + e.target.value
     });
   };
 
@@ -343,10 +411,87 @@ class MarketView extends React.Component {
     this.setState({ page: 0, rowsPerPage: event.target.value });
   };
 
+  searchDepth=()=>{
+    let futureId;
+    if(this.state.type+this.state.period === "OILJULY16")
+      futureId = "1";
+    else if(this.state.type+this.state.period === "OILAUG16")
+      futureId = "2";
+    else if(this.state.type+this.state.period === "GOLDJULY16")
+      futureId = "4";
+    else if(this.state.type+this.state.period === "SILVERJULY16")
+      futureId = "6";
+
+    fetch('http://202.120.40.8:30405/market?futureID='+futureId,
+        {
+          method: 'GET',
+          mode: 'cors',
+        })
+        .then(response => {
+          console.log('Request successful', response);
+          //console.log("status:",response.status);
+          return response.json()
+              .then(result => {
+                console.log("result:", result);
+                let buy_list = result["buy_list"];
+                let sell_list = result["sell_list"];
+                this.state.depth_rows.length = 0;
+                //console.log(this.state.depth_rows.length);
+                let row;
+                let sell_price_list = Object.keys(sell_list);
+                let buy_price_list = Object.keys(buy_list);
+
+                sell_price_list.sort();
+                buy_price_list.sort();
+                for (let i = 3; i > 0; i--) {
+                  if (sell_price_list.length >= i) {
+                    row = {
+                      level1: "",
+                      buy_vol: "",
+                      price: sell_price_list[i - 1],
+                      sell_vol: sell_list[sell_price_list[i - 1].toString()],
+                      level2: i
+                    }
+                  }
+                  else {
+                    row = {level1: "", buy_vol: "", price: "", sell_vol: "", level2: i}
+                  }
+                  this.state.depth_rows.push(row);
+                }
+                for (let i = 3; i >= 1; i--) {
+                  if (buy_price_list.length >= i) {
+                    row = {
+                      level1: i,
+                      buy_vol: buy_list[buy_price_list[i - 1].toString()],
+                      price: buy_price_list[i - 1],
+                      sell_vol: "",
+                      level2: ""
+                    }
+                  }
+                  else {
+                    row = {level1: i, buy_vol: "", price: "", sell_vol: "", level2: ""}
+                  }
+                  this.state.depth_rows.push(row);
+                  this.forceUpdate();
+                }
+              })
+        });
+  }
+
   handleViewDepth=(futureID)=>{
     console.log(futureID);
+    let name;
+    if(futureID === 1)
+      name = "OILJULY16";
+    else if(futureID === 2)
+      name = "OILAUG16";
+    else if(futureID === 3)
+      name = "GOLD JULY16";
+    else if(futureID === 4)
+      name = "SILVERJULY16";
     this.setState({
-      future_id: futureID
+      future_id: futureID,
+      product: name
     });
     fetch('http://202.120.40.8:30405/market?futureID='+futureID,
         {
@@ -365,21 +510,8 @@ class MarketView extends React.Component {
               this.state.depth_rows.length = 0;
               //console.log(this.state.depth_rows.length);
               let row;
-              let sell_price_list = [];
-              let buy_price_list = [];
-              let key_price;
-              for( key_price in sell_list);
-              {
-                //console.log(key_price);
-                sell_price_list.push(parseInt(key_price));
-              }
-              //console.log("sell price list len: ", sell_price_list.length);
-              for( key_price in buy_list);
-              {
-                //console.log(key_price);
-                buy_price_list.push(parseInt(key_price));
-              }
-              //console.log("buy price list len: ", buy_price_list.length);
+              let sell_price_list = Object.keys(sell_list);
+              let buy_price_list = Object.keys(buy_list);
               sell_price_list.sort();
               buy_price_list.sort();
               for(let i=3; i>0; i--){
@@ -397,7 +529,7 @@ class MarketView extends React.Component {
                 }
                 this.state.depth_rows.push(row);
               }
-              for(let i=1; i<4; i++){
+              for(let i=3; i>=1; i--){
                 if(buy_price_list.length >= i) {
                   row = {
                     level1: i,
@@ -416,6 +548,8 @@ class MarketView extends React.Component {
               }
             })
         })
+
+
   };
 
 
@@ -480,9 +614,9 @@ class MarketView extends React.Component {
                           onChange={this.handleChangePeriod}
                           input={<OutlinedInput />}
                       >
+                        <MenuItem value="JULY16">JULY16</MenuItem>
+                        <MenuItem value="AUG16">AUG16</MenuItem>
                         <MenuItem value="SEP16">SEP16</MenuItem>
-                        <MenuItem value="OCT14">OCT14</MenuItem>
-                        <MenuItem value="NOV18">NOV18</MenuItem>
                       </Select>
                     </FormControl>
 
@@ -555,7 +689,6 @@ class MarketView extends React.Component {
                           onChangePage={this.handleChangePage}
                           onChangeRowsPerPage={this.handleChangeRowsPerPage}
                           ActionsComponent={TablePaginationActionsWrapped}
-
                       />
                     </TableRow>
                   </CardFooter>
@@ -563,7 +696,7 @@ class MarketView extends React.Component {
               </GridItem>
               <GridItem xs={12} sm={12} md={4}>
                 <Card chart>
-                  <CardHeader color="success" style={{fontSize:"16px"}}>Market Depth of {this.state.type}  {this.state.period}</CardHeader>
+                  <CardHeader color="success" style={{fontSize:"16px"}}>Market Depth of {this.state.product}</CardHeader>
                   <CardBody>
 
                     <br/>

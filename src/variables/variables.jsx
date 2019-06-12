@@ -1,10 +1,16 @@
 /**
  * Created by 励颖 on 2019/6/10.
  */
-const name_company = {
-  "admin": "MS",
-
-}
+const name_company = [
+  {
+    name: "admin",
+    company: "MS",
+  },
+  {
+    name: "user",
+    company: "ABC Crop",
+  }
+]
 
 const future_info = [
   {
